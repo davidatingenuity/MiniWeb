@@ -9,6 +9,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 19
@@ -47,4 +48,19 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'org.slf4j:slf4j-api:1.7.+'
 
+}
+
+artifacts {
+    archives file('build/outputs/aar/androidlib.aar')
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://localhost/var/www/maven/")
+            pom.groupId = 'com.sciaps.lib'
+            pom.artifactId = 'miniweb'
+            pom.version = '0.1.0'
+        }
+    }
 }
