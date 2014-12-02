@@ -1,17 +1,27 @@
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven {
+            url "http://maven.sciaps.local"
+        }
+        maven {
+            url "http://files.couchbase.com/maven2/"
+        }
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
 archivesBaseName = 'miniweb'
-group = 'org.devsmart'
-version = '0.0.1'
+group = 'com.sciaps.lib'
+version = '0.1.0'
 description = 'A embedded java webserver'
-
-repositories {
-    mavenCentral()
-}
 
 
 dependencies {
@@ -21,4 +31,20 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile 'org.apache.httpcomponents:httpclient:4.3.4'
 
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://localhost/var/www/maven/")
+            //repository(url: "file:///home/paul/mymaven")
+            pom.artifactId = 'miniweb'
+        }
+    }
+}
+
+uploadArchives.dependsOn 'androidlib:assemble'
+
+artifacts() {
+    archives file('androidlib/build/outputs/aar/androidlib.aar')
 }
