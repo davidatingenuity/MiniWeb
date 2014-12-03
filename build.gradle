@@ -1,5 +1,10 @@
 
 allprojects {
+
+    group = 'com.sciaps.lib'
+    version = '0.1.0'
+    description = 'A embedded java webserver'
+
     repositories {
         mavenCentral()
         maven {
@@ -18,10 +23,7 @@ apply plugin: 'maven'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-archivesBaseName = 'miniweb'
-group = 'com.sciaps.lib'
-version = '0.1.0'
-description = 'A embedded java webserver'
+
 
 
 dependencies {
@@ -33,18 +35,23 @@ dependencies {
 
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "file://localhost/var/www/maven/")
-            //repository(url: "file:///home/paul/mymaven")
-            pom.artifactId = 'miniweb'
-        }
-    }
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
-uploadArchives.dependsOn 'androidlib:assemble'
+artifacts {
+    archives sourceJar
+}
 
-artifacts() {
-    archives file('androidlib/build/outputs/aar/androidlib.aar')
+
+uploadArchives {
+    repositories.mavenDeployer {
+        //repository(url: "file:///home/paul/mymaven")
+        repository(url: "file://localhost/var/www/maven/")
+        pom.groupId = project.group
+        pom.artifactId = 'miniweb'
+        pom.version = project.version
+
+    }
 }

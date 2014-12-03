@@ -9,6 +9,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 19
@@ -39,15 +40,31 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'org.slf4j:slf4j-api:1.7.+'
 
 }
 
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
 
+artifacts() {
+    archives androidSourcesJar
+    archives file('build/outputs/aar/androidlib.aar')
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        //repository(url: "file:///home/paul/mymaven")
+        repository(url: "file://localhost/var/www/maven/")
+        pom.groupId = project.group
+        pom.artifactId = 'miniweb-android'
+        pom.version = project.version
+        pom.packaging = 'aar'
+
+    }
+}
 
