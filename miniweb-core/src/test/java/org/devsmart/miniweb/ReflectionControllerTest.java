@@ -30,8 +30,6 @@ import org.devsmart.miniweb.handlers.controller.RequestMapping;
 import org.devsmart.miniweb.utils.RequestMethod;
 import org.junit.Test;
 
-import java.util.concurrent.ExecutorService;
-
 import static org.junit.Assert.*;
 
 public class ReflectionControllerTest {

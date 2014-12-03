@@ -1,1 +1,2 @@
-include 'androidlib'
+include ':miniweb-core'
+include ':miniweb-android'
