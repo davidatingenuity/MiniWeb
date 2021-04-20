@@ -54,7 +54,7 @@ public class AssetsFileHandler implements HttpRequestHandler {
                     path = path.substring(m.end(), path.length());
                 }
 
-                String filePath = mRoot + "/" + path;
+                String filePath = mRoot == null ? path : mRoot + "/" + path;
                 String filename = filePath.substring(filePath.lastIndexOf("/")+1, filePath.length());
                 attachAssetToResponse(response, getAssetFile(filePath), filename);
 
@@ -90,7 +90,7 @@ public class AssetsFileHandler implements HttpRequestHandler {
     private void handleRoot(HttpRequest request, HttpResponse response, HttpContext context) {
         for(String filename : sIndexFiles){
             try {
-                attachAssetToResponse(response, getAssetFile(mRoot + "/" + filename), filename);
+                attachAssetToResponse(response, getAssetFile(mRoot == null ? filename : mRoot + "/" + filename), filename);
                 return;
             } catch (IOException e) {
                 logger.error("", e);
