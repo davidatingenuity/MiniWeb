@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class FileSystemRequestHandler implements HttpRequestHandler {
@@ -21,11 +23,11 @@ public class FileSystemRequestHandler implements HttpRequestHandler {
     public final Logger logger = LoggerFactory.getLogger(FileSystemRequestHandler.class);
 
     private final File mRoot;
-    private final String mPrefix;
+    private final Pattern mPrefix;
 
     public FileSystemRequestHandler(File root, String prefix) {
         this.mRoot = root;
-        this.mPrefix = prefix;
+        this.mPrefix = Pattern.compile(prefix != null ? "^" + prefix.trim() : "^");
     }
 
     @Override
@@ -40,9 +42,11 @@ public class FileSystemRequestHandler implements HttpRequestHandler {
                     handleRoot(request, response, context);
                     return;
                 }
-                if(mPrefix != null && mPrefix.trim().length() > 0){
-                    path = path.substring(0, mPrefix.length());
+                Matcher m = mPrefix.matcher(path);
+                if(m.find()){
+                    path = path.substring(m.end(), path.length());
                 }
+
                 String[] pathsegments = path.split("/");
 
                 File file = new File(mRoot, "");
