@@ -6,6 +6,34 @@ and lightweight as possible while providing simple and easy to use API. MiniWeb 
 [Apache HttpComponents](http://hc.apache.org) at its core. MiniWeb only supports what is necessary to get an
 embedded web project up and running quickly (no servlets).
 
+This Fork
+------------
+This fork fixes issues with directory mapping
+
+Importing into Android Studio
+------------------------------
+This fork is published using jitpack.io
+
+Add to your top-level build.gradle:
+```
+allprojects {
+    repositories {
+    ...
+    ...
+    ...
+    maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+Add to your app-level build.gradle:
+
+```
+dependecies {
+    implementation 'com.github.davidatingenuity:MiniWeb:<Tag>'
+}
+```
+
 
 Example Usage
 --------------
@@ -13,10 +41,18 @@ Create a server that serves files from "public" folder:
 ```java
 Server server = new ServerBuilder()
     .port(9000)
-    .mapLocation("/*", new File("public"))
+    .mapDirectory("/*", new File("public"))
     .create();
 
 server.start();
+```
+
+Create a server that serve files from the web folder in the Android app assets directory under the "internal/" path (eg, http://hostname:9000/internal/*). The prefix "/internal" is removed from the requested filename before it is located within the web directory
+```java
+AssetsFileHandler assetHandler = new AssetsFileHandler(this, "web", "/internal");
+Server server = new ServerBuilder().port(9000)
+                .mapHandler("/internal/*", assetHandler)
+                .create();
 ```
 
 ### Controllers
